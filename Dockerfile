@@ -34,4 +34,6 @@ RUN python manage.py collectstatic --no-input
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "quintal_do_espeto.wsgi:application"]
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["gunicorn", "quintal_do_espeto.asgi:application", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
