@@ -48,6 +48,12 @@ class OrderAdmin(admin.ModelAdmin):
             return qs.filter(created_by=request.user, created_at__date=now_utc)
         return super(OrderAdmin, self).get_queryset(request)
 
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['show_save_and_continue'] = False
+        extra_context['show_save_and_add_another'] = False 
+        return super(OrderAdmin, self).changeform_view(request, object_id, extra_context=extra_context)
+
     def save_model(self, request, obj, form, change):
         obj.created_by = request.user
         super().save_model(request, obj, form, change)
