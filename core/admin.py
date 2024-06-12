@@ -45,7 +45,7 @@ class OrderAdmin(admin.ModelAdmin):
         if not request.user.is_superuser:
             now_utc = datetime.now(timezone.utc) - timedelta(hours=3)
             qs = super(OrderAdmin, self).get_queryset(request) 
-            return qs.filter(created_by=request.user, created_at__gte=now_utc)
+            return qs.filter(created_by=request.user, created_at__date=now_utc)
         return super(OrderAdmin, self).get_queryset(request)
 
     def save_model(self, request, obj, form, change):
