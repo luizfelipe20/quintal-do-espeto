@@ -4,19 +4,11 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-1ie+gnw_kbjqijwm97&_vumi$%2n465+h3a2%1h8((viyjcqvo'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG")
 
 ALLOWED_HOSTS = ['*']
-
-CSRF_TRUSTED_ORIGINS = ['https://e521-45-238-114-185.ngrok-free.app']
 
 # Application definition
 
@@ -62,7 +54,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'quintal_do_espeto.wsgi.application'
 
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -73,9 +64,6 @@ DATABASES = {
         "PORT": os.environ.get("DB_PORT"),
     }
 }
-
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -110,13 +98,15 @@ USE_TZ = True
 
 # Configurações de arquivos estáticos
 STATIC_URL = '/static/'
-STATICFILES_DIRS = BASE_DIR, 'static'
-STATIC_ROOT = BASE_DIR / "staticfiles"
+if not DEBUG:
+    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
+    # and renames the files with unique names for each version to support long-term caching
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Configurações de arquivos estáticos adicionais (opcional)
-WHITENOISE_USE_FINDERS = True
+    # Configurações de arquivos estáticos adicionais (opcional)
+    WHITENOISE_USE_FINDERS = True
 
 
 # Default primary key field type
