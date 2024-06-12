@@ -1,5 +1,7 @@
 import uuid
 from django.db import models
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class Item(models.Model):
@@ -35,9 +37,8 @@ class Table(models.Model):
 
 class Order(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # _table = models.ManyToManyField(Table, verbose_name='Mesa', null=True, blank=True)
     client = models.CharField(verbose_name='Cliente', max_length=400, null=True, blank=True)
-    # account_closing_time = models.DateTimeField(verbose_name='Horário de encerramento da conta', null=True, blank=True)
+    created_by = models.ForeignKey(User, verbose_name='Criado por', on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(verbose_name='Data de criação', auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True)
 
